@@ -5,25 +5,25 @@
   <div class="max-w-4xl relative bottom-8 w-full space-y-8 bg-white shadow-lg rounded-lg p-8">
     
     <!-- Informasi Keuangan -->
-    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6" data-aos="fade-up" data-aos-duration="1000">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Ringkasan Keuangan</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div class="bg-green-100 p-4 rounded-lg border border-green-300">
+        <div class="bg-green-100 p-4 rounded-lg border border-green-300" data-aos="flip-left" data-aos-duration="1000">
           <p class="text-sm font-medium text-green-800">Total Pemasukan</p>
           <p class="text-2xl font-bold text-green-600">{{ total_pemasukan|floatformat:2 }}</p>
         </div>
-        <div class="bg-red-100 p-4 rounded-lg border border-red-300">
+        <div class="bg-red-100 p-4 rounded-lg border border-red-300" data-aos="flip-right" data-aos-duration="1000">
           <p class="text-sm font-medium text-red-800">Total Pengeluaran</p>
           <p class="text-2xl font-bold text-red-600">{{ total_pengeluaran|floatformat:2 }}</p>
         </div>
-        <div class="bg-blue-100 p-4 rounded-lg border border-blue-300 col-span-2">
+        <div class="bg-blue-100 p-4 rounded-lg border border-blue-300 col-span-2" data-aos="zoom-in" data-aos-duration="1000">
           <p class="text-sm font-medium text-blue-800">Saldo</p>
           <p class="text-2xl font-bold text-blue-600">{{ saldo|floatformat:2 }}</p>
         </div>
       </div>
     </div>
 
-    <div>
+    <div data-aos="zoom-in-up" data-aos-duration="1000">
       <h1 class="text-center text-3xl font-extrabold text-gray-900 mb-8">Filter Transaksi</h1>
       <form class="space-y-6" method="get" action="{% url 'transaksi:filter' %}">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -52,7 +52,7 @@
       </form>
     </div>
 
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto" data-aos="fade-left" data-aos-duration="1000">
       <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg bg-white shadow-md">
         <thead>
           <tr>
@@ -78,6 +78,5 @@
         </tbody>
       </table>
     </div>
-  </div>
-</div>
+    
 {% endblock %}
