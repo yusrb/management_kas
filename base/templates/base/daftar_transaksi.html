@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 relative bottom-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-4xl font-extrabold text-gray-900">Daftar Transaksi</h1>
+      <div class="flex space-x-4">
+        {% if user.is_authenticated %}
+        <form action="{% url "user:logout" %}" method="post" class="inline">
+          {% csrf_token %}
+          <button type="submit"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            Logout
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'user:login' %}"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Login
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if messages %}
+    <div class="bg-purple-400 text-white shadow-md rounded-lg p-6 mb-6">
+      <div class="space-y-4">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg {{ message.tags }} text-white">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if user.is_staff %}
+    <!-- Informasi Keuangan -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Ringkasan Keuangan</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="bg-green-100 p-4 rounded-lg border border-green-300">
+          <p class="text-sm font-medium text-green-800">Total Pemasukan</p>
+          <p class="text-2xl font-bold text-green-600">{{ total_pemasukan|floatformat:2 }}</p>
+        </div>
+        <div class="bg-red-100 p-4 rounded-lg border border-red-300">
+          <p class="text-sm font-medium text-red-800">Total Pengeluaran</p>
+          <p class="text-2xl font-bold text-red-600">{{ total_pengeluaran|floatformat:2 }}</p>
+        </div>
+        <div class="bg-blue-100 p-4 rounded-lg border border-blue-300 col-span-2">
+          <p class="text-sm font-medium text-blue-800">Saldo</p>
+          <p class="text-2xl font-bold text-blue-600">{{ saldo|floatformat:2 }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Tabel Daftar Transaksi -->
+    <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th class="px-6 py-3 bg-indigo-600 text-left text-xs font-medium text-white uppercase tracking-wider">
+              Tanggal</th>
+            <th class="px-6 py-3 bg-indigo-600 text-left text-xs font-medium text-white uppercase tracking-wider">Tipe
+            </th>
+            <th class="px-6 py-3 bg-indigo-600 text-left text-xs font-medium text-white uppercase tracking-wider">Jumlah
+            </th>
+            <th class="px-6 py-3 bg-indigo-600 text-left text-xs font-medium text-white uppercase tracking-wider">
+              Deskripsi</th>
+            <th class="px-6 py-3 bg-indigo-600 text-left text-xs font-medium text-white uppercase tracking-wider">
+              Ubah</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for transaksi in daftar_transaksi %}
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ transaksi.tanggal }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ transaksi.tipe_transaksi }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ transaksi.jumlah }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ transaksi.deskripsi }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <a href="{% url 'base:ubah' transaksi.pk %}" class="text-blue-600 hover:text-blue-800">Update</a>
+              <a href="{% url 'base:hapus' transaksi.pk %}" class="text-red-600 hover:text-red-800 ml-4">Delete</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada transaksi</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tombol Cetak -->
+    {% if user.is_staff %}
+    <div class="mt-8">
+      <button onclick="window.print()" class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        Cetak Daftar Transaksi
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

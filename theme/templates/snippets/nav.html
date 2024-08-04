@@ -1,0 +1,24 @@
+<aside class="w-64 bg-blue-50 text-gray-900 shadow-lg">
+  <div class="p-4">
+    <h2 class="text-2xl font-bold text-blue-900">Admin Panel</h2>
+    <ul class="mt-6 space-y-2">
+      {% if user.is_authenticated %}
+      <li><a href="{% url 'base:daftar' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Daftar Transaksi</a></li>
+      <li><a href="{% url 'transaksi:filter' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Filter Transaksi</a></li>
+      {% if user.is_staff %}
+          <li><a href="{% url 'transaksi:tambah' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Tambah Transaksi</a></li>
+          <li><a href="{% url 'admin:index' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Admin Dashboard</a></li>
+        {% endif %}
+        <li>
+          <form action="{% url 'user:logout' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="block py-2 px-4 rounded hover:bg-blue-100">Logout</button>
+          </form>
+        </li>
+      {% else %}
+        <li><a href="{% url 'user:login' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Login</a></li>
+        <li><a href="{% url 'user:register' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Register</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</aside>

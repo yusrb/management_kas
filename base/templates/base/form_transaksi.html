@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 relative bottom-8">
+  <div class="max-w-md w-full bg-white shadow-md rounded-lg p-8 space-y-6">
+    <div>
+      <h1 class="text-center text-3xl font-extrabold text-gray-900">Tambah Transaksi</h1>
+    </div>
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      
+      <div>
+        <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal</label>
+        <input type="date" name="tanggal" id="tanggal" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ form.tanggal.value }}">
+      </div>
+
+      <div>
+        <label for="tipe_transaksi" class="block text-sm font-medium text-gray-700">Tipe Transaksi</label>
+        <select name="tipe_transaksi" id="tipe_transaksi" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option value="Pemasukan" {% if form.tipe_transaksi.value == 'Pemasukan' %}selected{% endif %}>Pemasukan</option>
+          <option value="Pengeluaran" {% if form.tipe_transaksi.value == 'Pengeluaran' %}selected{% endif %}>Pengeluaran</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="jumlah" class="block text-sm font-medium text-gray-700">Jumlah</label>
+        <input type="number" name="jumlah" id="jumlah" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ form.jumlah.value }}">
+      </div>
+
+      <div>
+        <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+        <textarea name="deskripsi" id="deskripsi" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ form.deskripsi.value }}</textarea>
+      </div>
+
+      <div class="mt-6">
+        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Tambah
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

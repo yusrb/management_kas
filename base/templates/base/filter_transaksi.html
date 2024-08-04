@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 relative bottom-8">
+  <div class="max-w-4xl relative bottom-8 w-full space-y-8 bg-white shadow-lg rounded-lg p-8">
+    
+    <!-- Informasi Keuangan -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Ringkasan Keuangan</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="bg-green-100 p-4 rounded-lg border border-green-300">
+          <p class="text-sm font-medium text-green-800">Total Pemasukan</p>
+          <p class="text-2xl font-bold text-green-600">{{ total_pemasukan|floatformat:2 }}</p>
+        </div>
+        <div class="bg-red-100 p-4 rounded-lg border border-red-300">
+          <p class="text-sm font-medium text-red-800">Total Pengeluaran</p>
+          <p class="text-2xl font-bold text-red-600">{{ total_pengeluaran|floatformat:2 }}</p>
+        </div>
+        <div class="bg-blue-100 p-4 rounded-lg border border-blue-300 col-span-2">
+          <p class="text-sm font-medium text-blue-800">Saldo</p>
+          <p class="text-2xl font-bold text-blue-600">{{ saldo|floatformat:2 }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h1 class="text-center text-3xl font-extrabold text-gray-900 mb-8">Filter Transaksi</h1>
+      <form class="space-y-6" method="get" action="{% url 'transaksi:filter' %}">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="tanggal_awal" class="block text-sm font-medium text-gray-700">Tanggal Awal</label>
+            <input type="date" name="tanggal_awal" id="tanggal_awal" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          </div>
+          <div>
+            <label for="tanggal_akhir" class="block text-sm font-medium text-gray-700">Tanggal Akhir</label>
+            <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          </div>
+          <div class="col-span-1 sm:col-span-2">
+            <label for="tipe_transaksi" class="block text-sm font-medium text-gray-700">Tipe Transaksi</label>
+            <select name="tipe_transaksi" id="tipe_transaksi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <option value="">Semua Tipe</option>
+              <option value="Pemasukan">Pemasukan</option>
+              <option value="Pengeluaran">Pengeluaran</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6">
+          <button type="submit" class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Filter
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg bg-white shadow-md">
+        <thead>
+          <tr>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for transaksi in daftar_transaksi %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaksi.tanggal|date:'d F Y' }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ transaksi.get_tipe_transaksi_display }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaksi.jumlah }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ transaksi.deskripsi }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada transaksi</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
