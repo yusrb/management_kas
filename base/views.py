@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from typing import Any
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
@@ -19,6 +20,7 @@ class DaftarTransaksiView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["judul"] = "Daftar Transaksi"
         total_pemasukan = self.get_queryset().filter(tipe_transaksi='Pemasukan').aggregate(total=models.Sum('jumlah'))['total'] or 0
         total_pengeluaran = self.get_queryset().filter(tipe_transaksi='Pengeluaran').aggregate(total=models.Sum('jumlah'))['total'] or 0
         saldo = total_pemasukan - total_pengeluaran
@@ -35,6 +37,12 @@ class TambahTransaksiView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     template_name = 'base/form_transaksi.html'
     permission_required = 'transaksi.add_transaksi'
     success_url = reverse_lazy('transaksi:daftar')
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["judul"] = "Tambah Transaksi"
+        return context
+    
 
     def form_valid(self, form):
         print("Form is valid") 
@@ -54,7 +62,13 @@ class UbahTransaksiView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
     form_class = FormTransaksi
     template_name = 'base/form_transaksi.html'
     permission_required = 'transaksi.change_transaksi'
-    success_url = reverse_lazy('transaksi:daftar')  # Tambahkan ini untuk redirect setelah sukses
+    success_url = reverse_lazy('transaksi:daftar')
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["judul"] = "Ubah Transaksi"
+        return context
+    
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -67,6 +81,12 @@ class HapusTransaksiView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     success_url = reverse_lazy('transaksi:daftar')
     permission_required = 'transaksi.delete_transaksi'
 
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["judul"] = "Confirm Delete"
+        return context
+    
+
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Transaksi berhasil dihapus!')
         return super().delete(request, *args, **kwargs)
@@ -76,6 +96,7 @@ class FilterTransaksiView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["judul"] = "Filter Transaksi"
         tanggal_awal = self.request.GET.get('tanggal_awal')
         tanggal_akhir = self.request.GET.get('tanggal_akhir')
         tipe_transaksi = self.request.GET.get('tipe_transaksi') 
