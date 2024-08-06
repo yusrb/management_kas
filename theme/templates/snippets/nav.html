@@ -5,9 +5,9 @@
       {% if user.is_authenticated %}
       <li><a href="{% url 'base:daftar' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Daftar Transaksi</a></li>
       <li><a href="{% url 'transaksi:filter' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Filter Transaksi</a></li>
+      <li><a href="{% url 'transaksi:tambah' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Tambah Transaksi</a></li>
       {% if user.is_staff %}
-          <li><a href="{% url 'transaksi:tambah' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Tambah Transaksi</a></li>
-          <li><a href="{% url 'admin:index' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Admin Dashboard</a></li>
+      <li><a href="{% url 'admin:index' %}" class="block py-2 px-4 rounded hover:bg-blue-100">Admin Dashboard</a></li>
         {% endif %}
         <li>
           <form action="{% url 'user:logout' %}" method="post" class="inline">

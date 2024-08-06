@@ -31,11 +31,10 @@ class DaftarTransaksiView(LoginRequiredMixin, ListView):
 
         return context
 
-class TambahTransaksiView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class TambahTransaksiView(LoginRequiredMixin, CreateView):
     model = Transaksi
     form_class = FormTransaksi
     template_name = 'base/form_transaksi.html'
-    permission_required = 'transaksi.add_transaksi'
     success_url = reverse_lazy('transaksi:daftar')
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
@@ -45,14 +44,14 @@ class TambahTransaksiView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     
 
     def form_valid(self, form):
-        print("Form is valid") 
+        print("Form adalah valid") 
         form.instance.pengguna = self.request.user
         response = super().form_valid(form)
         messages.success(self.request, 'Transaksi berhasil ditambahkan!')
         return response
     
     def form_invalid(self, form):
-        print("Form is invalid")  
+        print("Form adalah invalid")  
         print(form.errors)
         messages.error(self.request, 'Ada kesalahan dalam form.')
         return super().form_invalid(form)
@@ -86,7 +85,6 @@ class HapusTransaksiView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
         context["judul"] = "Confirm Delete"
         return context
     
-
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Transaksi berhasil dihapus!')
         return super().delete(request, *args, **kwargs)
