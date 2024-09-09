@@ -7,7 +7,7 @@ class Transaksi(models.Model):
         ('Pengeluaran', 'Pengeluaran'),
     ]
 
-    pengguna = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     tanggal = models.DateField()
     tipe_transaksi = models.CharField(max_length=50, choices=TIPE_TRANSAKSI_CHOICES)
     jumlah = models.DecimalField(max_digits=10, decimal_places=2)
