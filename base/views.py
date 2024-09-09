@@ -12,19 +12,17 @@ class DaftarTransaksiView(LoginRequiredMixin, ListView):
     template_name = 'base/daftar_transaksi.html'
     context_object_name = 'daftar_transaksi'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if self.request.user.groups.filter(name='user').exists():
-            queryset = queryset.filter(pengguna=self.request.user)
-        return queryset
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["judul"] = "Daftar Transaksi"
-        total_pemasukan = self.get_queryset().filter(tipe_transaksi='Pemasukan').aggregate(total=models.Sum('jumlah'))['total'] or 0
-        total_pengeluaran = self.get_queryset().filter(tipe_transaksi='Pengeluaran').aggregate(total=models.Sum('jumlah'))['total'] or 0
+
+        daftar_transaksi = Transaksi.objects.all()
+
+        total_pemasukan = daftar_transaksi.filter(tipe_transaksi='Pemasukan').aggregate(total=models.Sum('jumlah'))['total'] or 0
+        total_pengeluaran = daftar_transaksi.filter(tipe_transaksi='Pengeluaran').aggregate(total=models.Sum('jumlah'))['total'] or 0
         saldo = total_pemasukan - total_pengeluaran
 
+        context['daftar_transaksi'] = context['daftar_transaksi'].filter(user = self.request.user)
         context['total_pemasukan'] = total_pemasukan
         context['total_pengeluaran'] = total_pengeluaran
         context['saldo'] = saldo
@@ -45,7 +43,7 @@ class TambahTransaksiView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         print("Form adalah valid") 
-        form.instance.pengguna = self.request.user
+        form.instance.user = self.request.user
         response = super().form_valid(form)
         messages.success(self.request, 'Transaksi berhasil ditambahkan!')
         return response
@@ -105,7 +103,7 @@ class FilterTransaksiView(LoginRequiredMixin, TemplateView):
         if tipe_transaksi:
             transaksi_queryset = transaksi_queryset.filter(tipe_transaksi=tipe_transaksi)
         if self.request.user.groups.filter(name='user').exists():
-            transaksi_queryset = transaksi_queryset.filter(pengguna=self.request.user)
+            transaksi_queryset = transaksi_queryset.filter(user=self.request.user)
 
         total_pemasukan = transaksi_queryset.filter(tipe_transaksi='Pemasukan').aggregate(total=models.Sum('jumlah'))['total'] or 0
         total_pengeluaran = transaksi_queryset.filter(tipe_transaksi='Pengeluaran').aggregate(total=models.Sum('jumlah'))['total'] or 0
